@@ -11,7 +11,7 @@
 #include <time.h>
 #include "AgentPlus.h"
 #include "CSVParser.h"
-
+#include <string>
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -759,7 +759,7 @@ float g_optimal_time_dependenet_dynamic_programming(
 	return g_ending_state_vector[vehicle_id].GetBestValue(DualCostFlag, vehicle_id);
 }
 
-void g_ReadInputData()
+void g_ReadInputData(string travel_timea)
 {
 
 	// initialization
@@ -923,7 +923,7 @@ void g_ReadInputData()
 
 				parser.GetValueByFieldName("speed_limit_in_mph", speed);
 				
-		    	parser.GetValueByFieldName("travel_time_1", travel_time);
+		    	parser.GetValueByFieldName(travel_timea, travel_time);
 
 				parser.GetValueByFieldName("jam_density", jam_density);
 
@@ -1317,8 +1317,7 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 
 
 	// sequential DP for each vehicle, based on the LR prices
-	for (int d = 1; d <= g_number_of_days; d++)
-	{
+
 		for (int v = 1; v <= g_number_of_vehicles; v++)
 		{
 			float path_cost_by_vehicle_v =
@@ -1372,7 +1371,6 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 				}
 			}
 		}  //end of vehicle v
-	} // end of day d
 	g_best_upper_bound = min(g_best_upper_bound, LR_global_upper_bound);  // keep the best lower bound till current iteration
 
 	CTimeSpan ctime = CTime::GetCurrentTime() - g_SolutionStartTime;
@@ -1515,13 +1513,13 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 
 
 	//output file for vehicle's path_node_seq and path_time_seq
-	g_pFile_OutputAgentLog = fopen("output_agent.csv", "w");
+	g_pFile_OutputAgentLog = fopen("output_agent.csv", "a+");
 	if (g_pFile_OutputAgentLog == NULL)
 	{
 		cout << "File output_agent.csv cannot be opened." << endl;
 		g_ProgramStop();
 	}
-	fprintf(g_pFile_OutputAgentLog, "LR_iteration,Stepsize,path_node_seq,path_ime_sequence");
+	fprintf(g_pFile_OutputAgentLog, "\nLR_iteration,Stepsize,path_node_seq,path_ime_sequence");
 
 	//output file for the updating of profits of passengers during different iteration
 	g_pFile_Output_paxprofitLog = fopen("Output_paxprofitLog.csv", "w");
@@ -1542,7 +1540,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	fprintf(g_pFile_PathLog, "vehicle No.,Time,state");
 
 	//output overview of your program data
-	g_pFileOutputLog = fopen("output_solution.csv", "w");
+	g_pFileOutputLog = fopen("output_solution.csv", "a+");
 	if (g_pFileOutputLog == NULL)
 	{
 		cout << "File output_solution.csv cannot be opened." << endl;
@@ -1558,7 +1556,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	}
 
 	//read input date including input_node.csv, input_link.csv and input_agent.csv
-	g_ReadInputData();
+	g_ReadInputData("travel_time_1");
 
 	// definte timestamps
 	clock_t start_t, end_t, total_t;

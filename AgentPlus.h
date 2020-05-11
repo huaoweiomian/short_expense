@@ -6,7 +6,7 @@
 using namespace std; 
 #define _MAX_LABEL_COST 99999
 
-#define _MAX_NUMBER_OF_NODES 500
+#define _MAX_NUMBER_OF_NODES 300
 #define _MAX_NUMBER_OF_LINKS 6000
 #define _MAX_NUMBER_OF_TIME_INTERVALS 200
 
