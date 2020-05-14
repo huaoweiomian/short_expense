@@ -42,7 +42,7 @@ public:
 	bool readpath();
 	void out();
 	map<int, vector<ITEM>> m_item;
-	void setitem(string& paths);
+	void setitem(string& paths, int day);
 private:
 	
 	vector<string> m_paths;

@@ -16,7 +16,7 @@ bool CPATH::readpath() {
 	if (!m_parser.OpenCSVFile(pathc, true)) {
 		return false;
 	}
-	
+	int day = 1;
 	string path;
 	string lr;
 	const string ubc = "Upperbound:";
@@ -30,11 +30,11 @@ bool CPATH::readpath() {
 		
 		if(m_parser.GetValueByFieldName("path_node_seq", path)== false)
 			continue;
-		setitem(path);
-		m_paths.push_back(path);
+		setitem(path,day++);
+		
 	}
 	m_parser.CloseCSVFile();
-	return m_paths.size() != 0;
+	return m_item.size() != 0;
 }
 
 void CPATH::out()
@@ -44,10 +44,9 @@ void CPATH::out()
 	}
 }
 
-void CPATH::setitem(string & paths)
+void CPATH::setitem(string & paths, int day)
 {
 	stringstream s(paths);
-	m_item;
 	vector<ITEM> items;
 	string tmp1;
 	int nodeid(0), nodeidpre(0);
@@ -67,4 +66,5 @@ void CPATH::setitem(string & paths)
 		items.push_back(item);
 		nodeidpre = nodeid;
 	}
+	m_item[day] = items;
 }
