@@ -11,6 +11,7 @@
 #include <time.h>
 #include "AgentPlus.h"
 #include "CSVParser.h"
+#include "PATH.h"
 #include <string>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1499,9 +1500,8 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 
 	return true;
 }
-
-
-int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
+bool first = true;
+int __tmain(string travel_time)
 {
 	//output file for Lagrandian and DP updating process
 	g_pFileDebugLog = fopen("Debug.txt", "w");
@@ -1519,7 +1519,13 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 		cout << "File output_agent.csv cannot be opened." << endl;
 		g_ProgramStop();
 	}
-	fprintf(g_pFile_OutputAgentLog, "\nLR_iteration,Stepsize,path_node_seq,path_ime_sequence");
+	if(first){
+		fprintf(g_pFile_OutputAgentLog, "LR_iteration,Stepsize,path_node_seq,path_ime_sequence");
+		first = false;
+	}
+	else {
+		fprintf(g_pFile_OutputAgentLog, "\nLR_iteration,Stepsize,path_node_seq,path_ime_sequence");
+	}
 
 	//output file for the updating of profits of passengers during different iteration
 	g_pFile_Output_paxprofitLog = fopen("Output_paxprofitLog.csv", "w");
@@ -1556,7 +1562,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	}
 
 	//read input date including input_node.csv, input_link.csv and input_agent.csv
-	g_ReadInputData("travel_time_1");
+	g_ReadInputData(travel_time);
 
 	// definte timestamps
 	clock_t start_t, end_t, total_t;
@@ -1616,5 +1622,48 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[])
 	getchar();
 	return 1;
 }
+map<int ,vector<ITEM> > initpath() {
+	return map<int, vector<ITEM> >();
+}
+vector<int> get_days(int size) {
+	vector<int> tmp;
+	for (int i = 0; i < size; ++i)
+		tmp.push_back(i);
+	return tmp;
+}
+bool init_travel_time(vector<ITEM>& path, string field) {
+	return true;
+}
+void out(vector<ITEM>& path) {
 
+}
+int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 
+	/*CPATH p;
+	p.readpath();
+	p.out();
+	string tmp;
+	p.setitem(tmp);*/
+	vector<string> tt = {"time_travel_1","travel_time_2"};
+	
+	for (auto v : tt) {
+		__tmain(v);	
+	}
+	map<int, vector<ITEM> > paths= initpath();
+	double allmin = 0;
+	vector<ITEM> path;
+	auto days = get_days(tt.size());
+	for(auto p:paths){
+		double minp = 0;
+		for (auto v : days) {
+			init_travel_time(p.second, tt[v]);
+			minp += CalculateCostForDays(p.second);
+		}
+		if (allmin > minp) {
+			allmin = minp;
+			path = p.second;
+		}		
+	}
+	out(path);
+	return 0;
+}
