@@ -161,7 +161,7 @@ double CalculateCostForDays(vector<ITEM>& paths) {
 	return Cost_d;
 }
 
-void main(){
+void testmain(){
 	double real = 19;
 	vector<ITEM> paths;
 	//11; 4; 2; 7; 2; 5; 9; 5; 6; 8; 6; 3; 10; 3; 1; 12;
