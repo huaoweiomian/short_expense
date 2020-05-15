@@ -9,9 +9,10 @@
 #include <omp.h>
 #include <algorithm>
 #include <time.h>
+
 #include "AgentPlus.h"
-#include "CSVParser.h"
 #include "PATH.h"
+//#include "CSVParser.h"
 #include <string>
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -135,7 +136,7 @@ int g_number_of_LR_iterations = 1;
 double g_minimum_subgradient_step_size = 0.01;
 
 int g_shortest_path_debugging_flag = 1;
-float g_waiting_time_ratio = 0.005;
+float g_waiting_time_ratio = 0.005f;
 float g_dummy_vehicle_cost_per_hour = 100;
 
 float g_travel_time_budget = 100;
@@ -1619,12 +1620,9 @@ int __tmain(string travel_time)
 
 	cout << "End of Optimization " << endl;
 	cout << "free memory.." << endl;
-	getchar();
 	return 1;
 }
-map<int ,vector<ITEM> > initpath() {
-	return map<int, vector<ITEM> >();
-}
+
 vector<int> get_days(int size) {
 	vector<int> tmp;
 	for (int i = 0; i < size; ++i)
@@ -1632,18 +1630,26 @@ vector<int> get_days(int size) {
 	return tmp;
 }
 bool init_travel_time(vector<ITEM>& path, string field) {
-	return true;
+	CPATH t;
+	return t.update_trave_time(path, field);
 }
 void out(vector<ITEM>& path) {
+	cout << path[0].from_node.nodeid << "," << ends;
+	for (auto v : path) {
+		cout << v.to_node.nodeid << "," << ends;
+	}
+	cout << endl;
+}
 
+map<int, vector<ITEM> >  initpath() {
+	CPATH path;
+	path.readpath();
+	path.read_link_type();
+	path.readpassenger();
+	return path.m_item;
 }
 int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
-
-	/*CPATH p;
-	p.readpath();
-	p.out();
-	string tmp;
-	p.setitem(tmp);*/
+	CPATH path_help;
 	vector<string> tt = {"time_travel_1","travel_time_2"};
 	
 	for (auto v : tt) {

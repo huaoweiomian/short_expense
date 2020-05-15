@@ -13,14 +13,12 @@ CTIME_TRAVEL::~CTIME_TRAVEL()
 {
 }
 
-bool CTIME_TRAVEL::read_travel_time_in(vector<ITEM>& item,string tt)
+bool CTIME_TRAVEL::read_travel_time(vector<ITEM>& item,string tt)
 {
 	if (!m_parser.OpenCSVFile(pathc, true)) {
 		return false;
 	}
 	map<int, map<int, int>> mp;
-
-	
 	while (m_parser.ReadRecord())  // if this line contains [] mark, then we will also read field headers.
 	{
 		int t(0);
@@ -41,7 +39,6 @@ bool CTIME_TRAVEL::read_travel_time_in(vector<ITEM>& item,string tt)
 	}
 	m_parser.CloseCSVFile();
 	return item.size() != 0;
-	return false;
 }
 
 bool CTIME_TRAVEL::read_link_type (vector<ITEM>& item)
@@ -106,8 +103,32 @@ bool CTIME_TRAVEL::read_passenger(vector<ITEM>& item)
 	}
 	for (auto v : agents)
 	{
-
+		auto p = passenger_nodes(item, v.from_node_id, v.to_node_id);
+		item[p.first].to_node.p.start = v.departure_time_start;
+		item[p.first].to_node.p.end = v.departure_time_end;
+		item[p.first].to_node.nodetype = 1;
+		item[p.second].to_node.p.start = v.arrival_time_start;
+		item[p.second].to_node.p.end = v.arrival_time_end;
+		item[p.second].to_node.nodetype = 2;
 	}
 	m_parser.CloseCSVFile();
 	return true;
+}
+
+pair<int, int> CTIME_TRAVEL::passenger_nodes(vector<ITEM>& item, int from_node_id, int to_node_id)
+{
+	map<int, vector<vector<ITEM>::size_type> > mps, mpe;
+	for (vector<ITEM>::size_type s = 0; s < item.size(); ++s) {
+		if (item[s].from_node.nodeid != from_node_id)
+			continue;
+		for (vector<ITEM>::size_type e = s+1; e < item.size(); ++e) {
+			if (item[e].from_node.nodeid != to_node_id)
+				continue;
+			if (item[s].to_node.nodeid + 1 == item[e].to_node.nodeid)
+			{
+				return make_pair(int(s), int(e));
+			}
+		}
+	}
+	return make_pair(0,0);
 }

@@ -69,7 +69,7 @@ double CalculateCostForDays(vector<ITEM>& paths) {
 	leaving_time_interval = to_node_current_time_interval;
 	float Cost_d = 1.00;
 	set<int> not_reach;
-	map<int, pair<int, int> > passagerstart;
+	map<int, pair<double, int> > passagerstart;
 	for (auto i = vector<ITEM>::size_type(0); i < paths.size();++i) {
 		auto v = paths[i];
 		if (not_reach.find(v.from_node.nodeid) != not_reach.end() || 

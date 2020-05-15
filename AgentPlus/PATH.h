@@ -1,12 +1,15 @@
 #pragma once
+#include "stdafx.h"
 #include "CSVParser.h"
 #include <string>
 #include <iostream>
+#include "TIME_TRAVEL.h"
 using namespace std;
 struct PASSENGER {
 	int start, end;//ʱ�䴰
 };
 struct NODE {
+	NODE() { nodetype = 0; }
 	int nodeid, nodetype;
 	PASSENGER p;
 };
@@ -41,11 +44,14 @@ public:
 	CPATH();
 	~CPATH();
 	bool readpath();
+	bool readpassenger();
+	bool read_link_type();
+	bool update_trave_time(vector<ITEM>&path, string tt);
 	void out();
-	map<int, vector<ITEM>> m_item;
+	map<int, vector<ITEM> > m_item;
 	void setitem(string& paths, int day);
 private:
-	
+	CTIME_TRAVEL m_tt;
 	vector<string> m_paths;
 	CCSVParser m_parser;
 };

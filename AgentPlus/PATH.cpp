@@ -37,6 +37,28 @@ bool CPATH::readpath() {
 	return m_item.size() != 0;
 }
 
+bool CPATH::readpassenger()
+{
+	for(map<int, vector<ITEM> >::iterator it = m_item.begin();
+		it != m_item.end(); ++it){ 
+		m_tt.read_passenger(it->second);
+	}
+	return true;
+}
+
+bool CPATH::read_link_type() {
+	for (map<int, vector<ITEM> >::iterator it = m_item.begin();
+		it != m_item.end(); ++it) {
+		m_tt.read_link_type(it->second);
+	}
+	return true;
+}
+
+bool CPATH::update_trave_time(vector<ITEM>& path, string tt)
+{
+	return m_tt.read_travel_time(path, tt);
+}
+
 void CPATH::out()
 {
 	for (auto v : m_paths) {
