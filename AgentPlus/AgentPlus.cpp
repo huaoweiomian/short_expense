@@ -1648,10 +1648,11 @@ map<int, vector<ITEM> >  initpath() {
 	path.readpassenger();
 	return path.m_item;
 }
+
 int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 	CPATH path_help;
-	vector<string> tt = {"time_travel_1","travel_time_2"};
-	
+	vector<string> tt = path_help.read_travel_time_label();
+	path_help.clean_files();
 	for (auto v : tt) {
 		__tmain(v);	
 	}

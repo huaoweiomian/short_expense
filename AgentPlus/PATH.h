@@ -50,6 +50,8 @@ public:
 	void out();
 	map<int, vector<ITEM> > m_item;
 	void setitem(string& paths, int day);
+	void clean_files();
+	vector<string> read_travel_time_label();
 private:
 	CTIME_TRAVEL m_tt;
 	vector<string> m_paths;

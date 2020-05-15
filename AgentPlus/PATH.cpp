@@ -3,6 +3,7 @@
 #include <sstream>
 using namespace std;
 const string pathc = "output_agent.csv";
+const string path_input_link = "input_link.csv";
 
 CPATH::CPATH()
 {
@@ -89,4 +90,25 @@ void CPATH::setitem(string & paths, int day)
 		nodeidpre = nodeid;
 	}
 	m_item[day] = items;
+}
+
+void CPATH::clean_files()
+{
+	FILE* f = fopen(pathc.c_str(), "w");
+	fclose(f);
+}
+
+vector<string> CPATH::read_travel_time_label()
+{
+	if (!m_parser.OpenCSVFile(path_input_link, true)) {
+		return vector<string>();
+	}
+	vector<string> tt;
+	const string ttc = "travel_time";
+	for (auto v : m_parser.Headers) {
+		if (string::npos != v.find(ttc, 0))
+			tt.push_back(v);
+	}
+	m_parser.CloseCSVFile();
+	return tt;
 }
