@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 struct PASSENGER {
-	int start, end;
+	int start, end;//ʱ�䴰
 };
 struct NODE {
 	int nodeid, nodetype;
@@ -12,6 +12,7 @@ struct NODE {
 };
 
 struct ITEM {
+	int link_type;
 	NODE from_node, to_node;
 	int travel_time;
 	int tntype() { return to_node.nodetype; }

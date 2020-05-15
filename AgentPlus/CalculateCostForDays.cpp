@@ -3,39 +3,9 @@
 #include <set>
 #include <map>
 #include <iostream>
+#include "PATH.h"
 using namespace std;
-struct PASSENGER {
-	int start, end;
-};
-struct NODE {
-	int nodeid,nodetype;
-	PASSENGER p;
-};
 
-struct ITEM {
-	int link_type;
-	NODE from_node, to_node;
-	int travel_time;
-	int tntype() { return to_node.nodetype; }
-	bool is_common_node() {
-		return to_node.nodetype == 0;
-	}
-	bool is_passenger() {
-		return to_node.nodetype == 1;
-	}
-	bool is_passenger_reach() {
-		return to_node.nodetype == 2;
-	}
-	bool is_car_start_end() {
-		return to_node.nodetype == 3;
-	}
-	int p_start() {
-		return to_node.p.start;
-	}
-	int p_end() {
-		return to_node.p.end;
-	}
-};
 //乘客起点发现需要虚拟车
 int virtual_car_pstart(vector<ITEM>::size_type pos, vector<ITEM>& paths) { 
 	int cost_d = 0;
@@ -146,7 +116,7 @@ double CalculateCostForDays(vector<ITEM>& paths) {
 			else if (to_node_current_time_interval > v.p_end()) {//超过时间窗
 				Cost_d -= v.travel_time;
 				to_node_current_time_interval -= v.travel_time;
-				vector<NODE>::size_type posstart = 0;
+				vector<ITEM>::size_type posstart = 0;
 				Cost_d += virtual_car_pend(i,paths,posstart);
 				not_reach.insert(v.to_node.nodeid);
 				int startid = v.to_node.nodeid - 1;
