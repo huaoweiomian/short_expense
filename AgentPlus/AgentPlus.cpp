@@ -1656,7 +1656,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 		__tmain(v);	
 	}
 	map<int, vector<ITEM> > paths= initpath();
-	double allmin = 0;
+	double allmin = -1;
 	vector<ITEM> path;
 	auto days = get_days(tt.size());
 	for(auto p:paths){
@@ -1665,11 +1665,12 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 			init_travel_time(p.second, tt[v]);
 			minp += CalculateCostForDays(p.second);
 		}
-		if (allmin > minp) {
+		if (allmin > minp||allmin == -1) {
 			allmin = minp;
 			path = p.second;
 		}		
 	}
 	out(path);
+	getchar();
 	return 0;
 }
