@@ -1672,6 +1672,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 		}		
 	}
 	out(path);
+	cout << "lowest cost:" << allmin << endl;
 	getchar();
 	return 0;
 }
