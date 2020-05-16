@@ -774,6 +774,7 @@ void g_ReadInputData(string travel_timea)
 	g_number_of_nodes = 0;
 	g_number_of_links = 0;  // initialize  the counter to 0
 	int interval_node_no = 1;
+	g_number_of_passengers = 0;
 
 	// step 1: read node file
 	CCSVParser parser;
