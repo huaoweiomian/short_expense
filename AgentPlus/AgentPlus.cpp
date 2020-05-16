@@ -1665,6 +1665,7 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 		for (auto v : days) {
 			init_travel_time(p.second, tt[v]);
 			minp += CalculateCostForDays(p.second);
+			cout << "day:" << v << " mincost:" << minp << endl;
 		}
 		if (allmin > minp||allmin == -1) {
 			allmin = minp;

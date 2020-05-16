@@ -96,6 +96,8 @@ void CPATH::clean_files()
 {
 	FILE* f = fopen(pathc.c_str(), "w");
 	fclose(f);
+	f = fopen("output_solution.csv", "w");
+	fclose(f);
 }
 
 vector<string> CPATH::read_travel_time_label()

@@ -35,6 +35,12 @@ bool CTIME_TRAVEL::read_travel_time(vector<ITEM>& item,string tt)
 	for (vector<ITEM>::size_type i= 0; i < item.size();++i)
 	{
 		auto v = item[i];
+		auto f = mp.find(v.from_node.nodeid);
+		if (f == mp.end())
+			continue;
+		auto f1 = f->second.find(v.to_node.nodeid);
+		if (f1 == f->second.end())
+			continue;
 		item[i].travel_time = mp[v.from_node.nodeid][v.to_node.nodeid];
 	}
 	m_parser.CloseCSVFile();
@@ -52,11 +58,11 @@ bool CTIME_TRAVEL::read_link_type (vector<ITEM>& item)
 		int link_type(0);
 		int from(0);
 		int to(0);
-		if (m_parser.GetValueByFieldName("link_type", link_type) == false)
-			continue;
 		if (m_parser.GetValueByFieldName("from_node_id", from) == false)
 			continue;
 		if (m_parser.GetValueByFieldName("to_node_id", to) == false)
+			continue;
+		if (m_parser.GetValueByFieldName("link_type", link_type,false) == false)
 			continue;
 		mp[from][to] = link_type;
 	}
