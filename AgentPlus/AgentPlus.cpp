@@ -1660,17 +1660,19 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 	double allmin = -1;
 	vector<ITEM> path;
 	auto days = get_days(tt.size());
+	int pathid = 1;
 	for(auto p:paths){
 		double minp = 0;
 		for (auto v : days) {
 			init_travel_time(p.second, tt[v]);
 			minp += CalculateCostForDays(p.second);
-			cout << "day:" << v << " mincost:" << minp << endl;
+			cout << "pathid:"<< pathid << " day:" << v+1 << " all_day_totalmincost:" << minp << endl;
 		}
 		if (allmin > minp||allmin == -1) {
 			allmin = minp;
 			path = p.second;
-		}		
+		}
+		pathid++;
 	}
 	out(path);
 	cout << "lowest cost:" << allmin << endl;
