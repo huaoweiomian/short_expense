@@ -1525,6 +1525,7 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 	return true;
 }
 bool first = true;
+bool matrix_first = true;
 int __tmain(string travel_time)
 {
 	g_number_of_vehicles = 0;
@@ -1578,7 +1579,7 @@ int __tmain(string travel_time)
 		g_ProgramStop();
 	}
 
-	g_pFile_Vehicle_Path_PassengerLog = fopen("output_VehicleMatrix.csv", "w");
+	g_pFile_Vehicle_Path_PassengerLog = fopen("output_VehicleMatrix.csv", "a+");
 
 	if (g_pFile_Vehicle_Path_PassengerLog == NULL)
 	{
