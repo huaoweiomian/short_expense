@@ -6,6 +6,7 @@ const string pathout = "output_link.csv";
 const string pathpassenger = "input_agent.csv";
 CTIME_TRAVEL::CTIME_TRAVEL()
 {
+	m_passengers_total_base_cost = 0;
 }
 
 
@@ -88,6 +89,7 @@ bool CTIME_TRAVEL::read_passenger(vector<ITEM>& item)
 		return false;
 	}
 	vector<AGENT> agents;
+	m_passengers_total_base_cost = 0;
 	while (m_parser.ReadRecord())
 	{
 		AGENT agent;
@@ -106,6 +108,10 @@ bool CTIME_TRAVEL::read_passenger(vector<ITEM>& item)
 			continue;
 		agent.arrival_time_end += agent.arrival_time_start;
 		agents.push_back(agent);
+		double base_profile = 0;
+		if (m_parser.GetValueByFieldName("base_profit", base_profile) == false)
+			continue;
+		m_passengers_total_base_cost += base_profile;
 	}
 	for (auto v : agents)
 	{

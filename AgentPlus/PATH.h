@@ -44,6 +44,8 @@ struct ITEM {
 class CPATH
 {
 public:
+	const int UP = 1;
+	const int LOWER = 0;
 	CPATH();
 	~CPATH();
 	bool readpath();
@@ -51,10 +53,12 @@ public:
 	bool read_link_type();
 	bool update_trave_time(vector<ITEM>&path, string tt);
 	void out();
-	map<int, vector<ITEM> > m_item;
-	void setitem(string& paths, int day);
+	//lower or up(0, 1), day ,path
+	map<int, map<int, vector<ITEM> > > m_item;
+	void setitem(string& paths, int day, int lower_or_up);
 	void clean_files();
 	vector<string> read_travel_time_label();
+	double base_profile();
 private:
 	CTIME_TRAVEL m_tt;
 	vector<string> m_paths;

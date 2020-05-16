@@ -1665,24 +1665,32 @@ bool init_travel_time(vector<ITEM>& path, string field) {
 	CPATH t;
 	return t.update_trave_time(path, field);
 }
-void out(vector<ITEM>& path) {
-	cout << path[0].from_node.nodeid << "," << ends;
+void out(vector<ITEM>& path,string bound) {
+	cout << bound <<path[0].from_node.nodeid << "," << ends;
 	for (auto v : path) {
 		cout << v.to_node.nodeid << "," << ends;
 	}
 	cout << endl;
 }
 
-map<int, vector<ITEM> >  initpath() {
+map<int, map<int, vector<ITEM> > >  initpath() {
 	CPATH path;
-	path.readpath();
-	path.read_link_type();
-	path.readpassenger();
+
 	return path.m_item;
 }
 
 int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
+	auto low_up_bound = [](int lp)->string{
+		CPATH path;
+		if (lp == path.LOWER){
+			return "bound:lower ";
+		}
+		return "bound:up ";
+	};
 	CPATH path_help;
+	path_help.readpath();
+	path_help.read_link_type();
+	path_help.readpassenger();
 	vector<string> tt = path_help.read_travel_time_label();
 	path_help.clean_files();
 	for (auto v : tt) {
@@ -1692,26 +1700,44 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 			g_output_one = false;
 		}
 	}
-	map<int, vector<ITEM> > paths= initpath();
-	double allmin = -1;
-	vector<ITEM> path;
+	map<int, map<int, vector<ITEM> > > pathslp= path_help.m_item;
+	double allmin = -1, allminl = 0;;
+	vector<ITEM> path,pathl;
 	auto days = get_days(tt.size());
 	int pathid = 1;
-	for(auto p:paths){
-		double minp = 0;
+
+	for (auto paths : pathslp)
+	{
+		double minl = 0, minu = 0;
 		for (auto v : days) {
-			init_travel_time(p.second, tt[v]);
-			minp += CalculateCostForDays(p.second);
-			cout << "pathid:"<< pathid << " day:" << v+1 << " all_day_totalmincost:" << minp << endl;
+			auto minf = [&](double& minx, vector<ITEM>&path, int lp) {
+				init_travel_time(path, tt[v]);
+				minx += CalculateCostForDays(path);
+				if (lp == path_help.LOWER)
+				{
+					minx += path_help.base_profile();
+				}
+				cout << low_up_bound(lp)
+					<< "pathid:" << pathid << " day:" << v + 1
+					<< " all_day_totalmincost:" << minx << endl;
+			};
+			minf(minl,paths.second[path_help.LOWER], path_help.LOWER);
+			minf(minu, paths.second[path_help.UP], path_help.UP);
 		}
-		if (allmin > minp||allmin == -1) {
-			allmin = minp;
-			path = p.second;
+		if (allmin > minu || allmin == -1) {
+			allmin = minu;
+			allminl = minl;
+			path = paths.second[path_help.UP];
+			pathl = paths.second[path_help.LOWER];
 		}
 		pathid++;
 	}
-	out(path);
-	cout << "lowest cost:" << allmin << endl;
+	cout << endl;
+	
+	out(path, low_up_bound(path_help.UP));
+	cout << "lowest cost up bound:" << allmin
+		<< " lowest cost lower bound:"<<allminl<<endl;
+	cout << "gap between lower bound and up bound: " << (allmin - allminl)/allmin * 100<<"%"<<endl;
 	getchar();
 	return 0;
 }
