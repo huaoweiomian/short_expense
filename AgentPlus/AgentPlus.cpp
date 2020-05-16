@@ -22,7 +22,7 @@
 
 CWinApp theApp;
 using namespace std;
-
+bool g_output_one = true;
 FILE* g_pFileDebugLog = NULL;
 
 FILE* g_pFile_OutputAgentLog = NULL;
@@ -816,8 +816,11 @@ void g_ReadInputData(string travel_timea)
 			if (g_number_of_nodes % 1000 == 0)
 				cout << "reading " << g_number_of_nodes << " nodes.. " << endl;
 		}
-
-		cout << "number of nodes = " << g_number_of_nodes << endl;
+		if (g_output_one)
+		{
+			cout << "number of nodes = " << g_number_of_nodes << endl;
+		}
+		
 
 		g_number_of_physical_nodes = g_number_of_nodes;
 
@@ -954,8 +957,11 @@ void g_ReadInputData(string travel_timea)
 					cout << "reading " << g_number_of_links << " links.. " << endl;
 			}
 		}
-
-		cout << "number of links = " << g_number_of_links << endl;
+		if (g_output_one)
+		{
+			cout << "number of links = " << g_number_of_links << endl;
+		}
+		
 
 		fprintf(g_pFileOutputLog, "number of links =,%d\n", g_number_of_links);
 		parser.CloseCSVFile();
@@ -1132,8 +1138,10 @@ void g_ReadInputData(string travel_timea)
 
 	fprintf(g_pFileOutputLog, "number of passengers =,%d\n", g_number_of_passengers);
 	fprintf(g_pFileOutputLog, "number of vehicles =,%d\n", g_number_of_vehicles);
-
-	cout << "read " << g_number_of_nodes << " nodes, " << g_number_of_links << " links" << ", " << g_number_of_passengers << " passengers, " << g_number_of_vehicles << "vehicles" << endl;
+	if (g_output_one)
+	{
+		cout << "read " << g_number_of_nodes << " nodes, " << g_number_of_links << " links" << ", " << g_number_of_passengers << " passengers, " << g_number_of_vehicles << "vehicles" << endl;
+	}
 	fprintf(g_pFileDebugLog, "Network has %d nodes, %d links, %d  passengers, %d vehicles\n\n",
 		g_number_of_nodes, g_number_of_links, g_number_of_passengers, g_number_of_vehicles);
 
@@ -1162,8 +1170,11 @@ void g_ReadInputData(string travel_timea)
 
 bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()  // with varaible y only
 {
+	if (g_output_one)
+	{
+		cout << "Start scheduling passengers by Lagrangian Relaxation method" << endl;
+	}
 
-	cout << "Start scheduling passengers by Lagrangian Relaxation method" << endl;
 	g_SolutionStartTime = CTime::GetCurrentTime();
 
 
@@ -1256,8 +1267,11 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 		{
 			if (g_ending_state_vector[j].m_VSStateVector.size() == 0)
 				continue;
-
-			cout << "vehicle number = " << j << endl;
+			if (g_output_one)
+			{
+				cout << "vehicle number = " << j << endl;
+			}
+			
 
 			//output vehicle passing node sequence
 			fprintf(g_pFile_OutputAgentLog, "%d;", g_vehicle_depot_origin_node[j]);
@@ -1376,7 +1390,11 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 	g_best_upper_bound = min(g_best_upper_bound, LR_global_upper_bound);  // keep the best lower bound till current iteration
 
 	CTimeSpan ctime = CTime::GetCurrentTime() - g_SolutionStartTime;
-	cout << "\nComputational time:," << ctime.GetTotalSeconds() << endl;
+	if (g_output_one)
+	{
+		cout << "\nComputational time:," << ctime.GetTotalSeconds() << endl;
+	}
+	
 
 	//output vehicle's path_node_seq and path_time_seq for Upperbound
 	fprintf(g_pFile_OutputAgentLog, "\n%s,%s,",
@@ -1497,13 +1515,18 @@ bool g_Optimization_Lagrangian_Method_Vehicle_Routing_Problem_Simple_Variables()
 		(g_best_upper_bound - g_best_lower_bound),
 		(g_best_upper_bound - g_best_lower_bound) / max(1, g_best_upper_bound) *100.0
 	);
-	cout << "End of Lagrangian Iteration Process " << endl;
+	if (g_output_one)
+	{
+		cout << "End of Lagrangian Iteration Process " << endl;
+	}
+	
 
 	return true;
 }
 bool first = true;
 int __tmain(string travel_time)
 {
+	g_number_of_vehicles = 0;
 	//output file for Lagrandian and DP updating process
 	g_pFileDebugLog = fopen("Debug.txt", "w");
 	if (g_pFileDebugLog == NULL)
@@ -1576,8 +1599,11 @@ int __tmain(string travel_time)
 	end_t = clock();
 
 	total_t = (end_t - start_t);
-
-	cout << "CPU Running Time = " << total_t << " milliseconds" << endl;
+	if (g_output_one)
+	{
+		cout << "CPU Running Time = " << total_t << " milliseconds" << endl;
+	}
+	
 
 	fprintf(g_pFileDebugLog, "CPU Running Time = %ld milliseconds\n", total_t);
 	fprintf(g_pFileOutputLog, "CPU Running Time =,%ld, milliseconds\n", total_t);
@@ -1617,9 +1643,12 @@ int __tmain(string travel_time)
 	fclose(g_pFile_Output_paxprofitLog);
 	fclose(g_pFile_PathLog);
 
+	if (g_output_one)
+	{
+		cout << "End of Optimization " << endl;
+		cout << "free memory.." << endl;
+	}
 
-	cout << "End of Optimization " << endl;
-	cout << "free memory.." << endl;
 	return 1;
 }
 
@@ -1655,6 +1684,10 @@ int _tmain(int argc, TCHAR* argv[], TCHAR* envp[]) {
 	path_help.clean_files();
 	for (auto v : tt) {
 		__tmain(v);	
+		if (g_output_one)
+		{
+			g_output_one = false;
+		}
 	}
 	map<int, vector<ITEM> > paths= initpath();
 	double allmin = -1;
