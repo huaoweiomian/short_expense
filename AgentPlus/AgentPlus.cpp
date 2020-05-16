@@ -1643,6 +1643,7 @@ int __tmain(string travel_time)
 	fclose(g_pFileDebugLog);
 	fclose(g_pFile_Output_paxprofitLog);
 	fclose(g_pFile_PathLog);
+	fclose(g_pFile_Vehicle_Path_PassengerLog);
 
 	if (g_output_one)
 	{
