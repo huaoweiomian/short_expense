@@ -15,6 +15,9 @@ struct NODE {
 };
 
 struct ITEM {
+	ITEM() {
+		link_type = 0; travel_time = 0;
+	}
 	int link_type;
 	NODE from_node, to_node;
 	int travel_time;
